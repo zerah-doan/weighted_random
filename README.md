@@ -10,19 +10,13 @@ and all edge cases are checked properly.
 
 # Answer
 ## Startegy to implement task
-Base on inputed array of weight to generate a pool, then randomly select an element in that pool
-```
-Example:
-Inputed array of weight: [0, 3, 1, 8]
-It means
-* There are 4 versions (N = 4)
-* Weight of version 1 is 0 (w[1] = 0)
-* Weight of version 2 is 3 (w[2] = 3)
-* Weight of version 3 is 1 (w[3] = 1)
-* Weight of version 4 is 8 (w[4] = 8)
-So the pool will be [2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4]
-Then randonly select an elelment of pool => solved
-```
+How this algorithm works:
+* Add up all the weight
+* Randomly pick a number from 1 to sum of weights
+* Iterate over versions, subtract random weight by version weight
+* Compare result to 0, if less than or equal to zero then get that version
+
+The larger the weight the more likely to be less than zero
 
 ## Strategy to test
 To check the random algorithm is weighted correctly, we can do it both way: manual or auto test.
@@ -35,10 +29,12 @@ Example of test data:
 * [9999, 1] => expected result: most of time, the result will be message version 1
 * ...
 ```
-So the trategy is to set a very high weight for a specific version and expect that version will be retunred most of the time
+So the trategy is to set a very high weight for a specific version and expect that version will be retunred most of the time. OR set 0 weight for a version and expect that version will never be returned.
+
 
 ### Automated
-Automation can overcome the limitation of manual test
+Automation can overcome the limitation of manual test that we can loop for thousand times and compare actual result with given weight.
+BUT we have to accept the fact that randomness is relative so the result of randomness may have deviation. In my test code i set the deviation = 10%/sum of weights
 
-//TO DO
+
 
