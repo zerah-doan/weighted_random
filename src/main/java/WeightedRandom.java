@@ -1,3 +1,6 @@
+import java.util.Random;
+import java.util.stream.IntStream;
+
 public class WeightedRandom {
     //CONST
     private static final int MIN_NUMBER_OF_VERSION = 1;
@@ -6,26 +9,55 @@ public class WeightedRandom {
     private static final int MAX_WEIGHT = 1000000000;
 
 
+    /**
+     * Select a message version by weighted random algorithm
+     *
+     * @param weights
+     * @return message version
+     */
     public static int getRandomVersion(int[] weights) {
-        verifyInputData(weights);
-        return 0;
+        if (verifyInputData(weights)) {
+            int sumOfWeight = IntStream.of(weights).sum();
+            int randWeight = randomNumber(MIN_WEIGHT, sumOfWeight);
+            for (int i = 1; i <= weights.length; i++) {
+                randWeight -= weights[i - 1];
+                if (randWeight <= 0) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
-    private static void verifyInputData(int[] input) {
-        verifyNumberOfVersion(input.length);
+    private static int randomNumber(int min, int max) {
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+
+    }
+
+    private static boolean verifyInputData(int[] input) {
+        boolean status = true;
+        status = status && verifyNumberOfVersion(input.length);
         for (int item : input) {
-            verifyWeightOfVersion(item);
+            status = status && verifyWeightOfVersion(item);
         }
+        return status;
     }
-    private static void verifyNumberOfVersion(int num) {
+
+    private static boolean verifyNumberOfVersion(int num) {
         if (MIN_NUMBER_OF_VERSION > num || num > MAX_NUMBER_OF_VERSION) {
-
+            System.out.println("Number of version should be " + MIN_NUMBER_OF_VERSION + "-" + MAX_NUMBER_OF_VERSION);
+            return false;
         }
+        return true;
     }
-    private static void verifyWeightOfVersion(int weight) {
-        if (MIN_WEIGHT > weight || weight > MAX_WEIGHT) {
 
+    private static boolean verifyWeightOfVersion(int weight) {
+        if (MIN_WEIGHT > weight || weight > MAX_WEIGHT) {
+            System.out.println("Weight of version should be " + MIN_WEIGHT + "-" + MAX_WEIGHT);
+            return false;
         }
+        return true;
     }
 
 
